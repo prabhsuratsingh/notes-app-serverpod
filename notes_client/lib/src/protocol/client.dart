@@ -10,7 +10,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'protocol.dart' as _i3;
+import 'package:notes_client/src/protocol/note.dart' as _i3;
+import 'protocol.dart' as _i4;
 
 /// {@category Endpoint}
 class EndpointExample extends _i1.EndpointRef {
@@ -23,6 +24,33 @@ class EndpointExample extends _i1.EndpointRef {
         'example',
         'hello',
         {'name': name},
+      );
+}
+
+/// {@category Endpoint}
+class EndpointNotes extends _i1.EndpointRef {
+  EndpointNotes(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'notes';
+
+  _i2.Future<void> createNote(_i3.Note note) => caller.callServerEndpoint<void>(
+        'notes',
+        'createNote',
+        {'note': note},
+      );
+
+  _i2.Future<void> deleteNote(_i3.Note note) => caller.callServerEndpoint<void>(
+        'notes',
+        'deleteNote',
+        {'note': note},
+      );
+
+  _i2.Future<List<_i3.Note>> getAllNotes() =>
+      caller.callServerEndpoint<List<_i3.Note>>(
+        'notes',
+        'getAllNotes',
+        {},
       );
 }
 
@@ -41,7 +69,7 @@ class Client extends _i1.ServerpodClient {
     Function(_i1.MethodCallContext)? onSucceededCall,
   }) : super(
           host,
-          _i3.Protocol(),
+          _i4.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -50,12 +78,18 @@ class Client extends _i1.ServerpodClient {
           onSucceededCall: onSucceededCall,
         ) {
     example = EndpointExample(this);
+    notes = EndpointNotes(this);
   }
 
   late final EndpointExample example;
 
+  late final EndpointNotes notes;
+
   @override
-  Map<String, _i1.EndpointRef> get endpointRefLookup => {'example': example};
+  Map<String, _i1.EndpointRef> get endpointRefLookup => {
+        'example': example,
+        'notes': notes,
+      };
 
   @override
   Map<String, _i1.ModuleEndpointCaller> get moduleLookup => {};
