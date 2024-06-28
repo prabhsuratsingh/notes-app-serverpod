@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_client/notes_client.dart';
 import 'package:notes_flutter/main.dart';
+import 'package:notes_flutter/pages/note_dialog.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -41,6 +42,15 @@ class HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> _createNote(Note note) async {
+    try {
+      await client.notes.createNote(note);
+      await _loadNotes();
+    } catch (e) {
+      _connectionFailed(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +67,24 @@ class HomePageState extends State<HomePage> {
             );
           }),
         ),
+
+        floatingActionButton: _notes == null
+          ? null
+          : FloatingActionButton(
+            onPressed: () {
+              showNoteDialog(
+                context: context,
+                onSaved: (text) {
+                  var note = Note(
+                    text: text,
+                  );
+                  _notes!.add(note);
+                  _createNote(note);
+                }
+              );
+            },
+            child: const Icon(Icons.add),
+          ), 
     );
   }
 }
