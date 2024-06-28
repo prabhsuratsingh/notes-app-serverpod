@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_client/notes_client.dart';
 import 'package:notes_flutter/main.dart';
+import 'package:notes_flutter/pages/loading_screen.dart';
 import 'package:notes_flutter/pages/note_dialog.dart';
 
 
@@ -58,7 +59,10 @@ class HomePageState extends State<HomePage> {
         title: Text(widget.title),
       ),
       body: _notes == null
-        ? Container()
+        ? LoadingScreen(
+          exception: _connectionException,
+          onTryAgain: _loadNotes
+          )
         : ListView.builder(
           itemCount: _notes!.length,
           itemBuilder: ((context, index) {
