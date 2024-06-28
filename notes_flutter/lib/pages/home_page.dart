@@ -47,6 +47,16 @@ class HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
+      body: _notes == null
+        ? Container()
+        : ListView.builder(
+          itemCount: _notes!.length,
+          itemBuilder: ((context, index) {
+            return ListTile(
+              title: Text(_notes![index].text),
+            );
+          }),
+        ),
     );
   }
 }
