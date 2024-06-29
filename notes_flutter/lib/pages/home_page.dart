@@ -78,7 +78,7 @@ class HomePageState extends State<HomePage> {
             return ListTile(
               title: Text(_notes![index].text),
               trailing: IconButton(
-                icon: Icon(Icons.delete),
+                icon: const Icon(Icons.delete),
                 onPressed: () {
                   var note = _notes![index];
 
