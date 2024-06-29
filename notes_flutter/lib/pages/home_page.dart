@@ -52,6 +52,15 @@ class HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> _deleteNote(Note note) async {
+    try {
+      await client.notes.deleteNote(note);
+      await _loadNotes();
+    } catch (e) {
+      _connectionFailed(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +77,18 @@ class HomePageState extends State<HomePage> {
           itemBuilder: ((context, index) {
             return ListTile(
               title: Text(_notes![index].text),
+              trailing: IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  var note = _notes![index];
+
+                  setState(() {
+                    _notes!.remove(note);
+                  });
+
+                  _deleteNote(note);
+                },
+              ),
             );
           }),
         ),
